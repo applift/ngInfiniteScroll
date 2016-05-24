@@ -1,4 +1,4 @@
-/* ng-infinite-scroll - v1.2.1 - 2016-02-09 */
+/* ng-infinite-scroll - v1.2.1 - 2016-05-24 */
 var mod;
 
 mod = angular.module('infinite-scroll', []);
@@ -116,7 +116,10 @@ mod.directive('infiniteScroll', [
           container.unbind('scroll', handler);
           if (unregisterEventListener != null) {
             unregisterEventListener();
-            return unregisterEventListener = null;
+            unregisterEventListener = null;
+          }
+          if (checkInterval) {
+            return $interval.cancel(checkInterval);
           }
         });
         handleInfiniteScrollDistance = function(v) {
@@ -176,12 +179,12 @@ mod.directive('infiniteScroll', [
         if (attrs.infiniteScrollImmediateCheck != null) {
           immediateCheck = scope.$eval(attrs.infiniteScrollImmediateCheck);
         }
-        return checkInterval = $interval((function() {
-          if (immediateCheck) {
-            handler();
-          }
-          return $interval.cancel(checkInterval);
-        }));
+        if (immediateCheck) {
+          handler();
+          return checkInterval = $interval((function() {
+            return handler();
+          }), 300);
+        }
       }
     };
   }

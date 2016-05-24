@@ -194,8 +194,8 @@ describe "ng-infinite-scroll", ->
               replaceIndexFile "infinite-scroll-disabled='busy'", throttle
               browser.get pathToDocument
               expect(getItems().count()).toBe 0
-              browser.sleep(throttle)
               element(By.id("action")).click()
+              browser.sleep(400)
               expect(getItems().count()).toBe 100
 
             it "respects the infinite-scroll-distance attribute", ->

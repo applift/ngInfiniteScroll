@@ -108,7 +108,7 @@ mod.directive 'infiniteScroll', ['$rootScope', '$window', '$interval', 'THROTTLE
       if unregisterEventListener?
         unregisterEventListener()
         unregisterEventListener = null
-      if checkInterval 
+      if checkInterval
         $interval.cancel checkInterval
 
     # infinite-scroll-distance specifies how close to the bottom of the page
@@ -200,9 +200,10 @@ mod.directive 'infiniteScroll', ['$rootScope', '$window', '$interval', 'THROTTLE
     if attrs.infiniteScrollImmediateCheck?
       immediateCheck = scope.$eval(attrs.infiniteScrollImmediateCheck)
 
-    checkInterval = $interval (->
-      if immediateCheck
+    if immediateCheck
+      handler()
+      # do not harass angular digest too often, 300 ms - good
+      checkInterval = $interval (->
         handler()
-      $interval.cancel checkInterval
-    )
+      ), 300
 ]
